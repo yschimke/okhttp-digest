@@ -37,7 +37,7 @@ class DispatchingAuthenticator private constructor(private val authenticatorRegi
         }
       }
     }
-    throw IllegalArgumentException("unsupported auth scheme $challenges")
+    return null
   }
 
   override fun authenticateWithState(route: Route?, request: Request): Request? {
