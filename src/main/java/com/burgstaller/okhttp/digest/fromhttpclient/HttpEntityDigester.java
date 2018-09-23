@@ -30,6 +30,7 @@ import okio.BufferedSink;
 import okio.ByteString;
 import okio.Source;
 import okio.Timeout;
+import org.jetbrains.annotations.NotNull;
 
 public class HttpEntityDigester implements BufferedSink {
 
@@ -45,13 +46,18 @@ public class HttpEntityDigester implements BufferedSink {
         this.buffer = new Buffer();
     }
 
-
     @Override
-    public Buffer buffer() {
+    public Buffer getBuffer() {
         return buffer;
     }
 
-    @Override
+  @NotNull
+  @Override
+  public Buffer buffer() {
+    return buffer;
+  }
+
+  @Override
     public BufferedSink write(ByteString byteString) throws IOException {
         this.digester.update(byteString.toByteArray());
         return this;

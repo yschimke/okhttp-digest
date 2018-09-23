@@ -71,7 +71,11 @@ open class DigestAuthenticator(private val credentials: Credentials) : CachingAu
   private var isProxy: Boolean = false
 
   private fun parseChallenge(
-          buffer: String, pos: Int, len: Int, params: MutableMap<String, String>) {
+    buffer: String,
+    pos: Int,
+    len: Int,
+    params: MutableMap<String, String>
+  ) {
 
     val parser = BasicHeaderValueParser.INSTANCE
     val cursor = ParserCursor(pos, buffer.length)
@@ -142,10 +146,9 @@ open class DigestAuthenticator(private val credentials: Credentials) : CachingAu
 
   @Throws(IOException::class)
   private fun authenticateWithState(route: Route?, request: Request, parameters: MutableMap<String, String>): Request? {
-    val realm = parameters["realm"]
-            ?: // missing realm, this would mean that the authenticator is not initialized for this
+    val realm = parameters["realm"] // missing realm, this would mean that the authenticator is not initialized for this
             // request. (e.g. if you configured the DispatchingAuthenticator.
-            return null
+            ?: return null
     val nonce = parameters["nonce"] ?: throw IllegalArgumentException("missing nonce in challenge")
     val stale = parameters["stale"]
     val isStale = "true".equals(stale, ignoreCase = true)
@@ -186,7 +189,7 @@ open class DigestAuthenticator(private val credentials: Credentials) : CachingAu
    * again and would fail again and again, ...
    *
    * @param request the previous request
-   * @param nonce   the current server nonce.
+   * @param nonce the current server nonce.
    * @param isStale when `true` then the server told us that the nonce was stale.
    * @return `true` in case the previous request already was authenticating to the current
    * server nonce.
@@ -222,9 +225,10 @@ open class DigestAuthenticator(private val credentials: Credentials) : CachingAu
   @Synchronized
   @Throws(DigestAuthenticator.AuthenticationException::class)
   private fun createDigestHeader(
-          credentials: Credentials,
-          request: Request,
-          parameters: Map<String, String>): NameValuePair {
+    credentials: Credentials,
+    request: Request,
+    parameters: Map<String, String>
+  ): NameValuePair {
     val uri = parameters["uri"]
     val realm = parameters["realm"]
     val nonce = parameters["nonce"]
@@ -402,8 +406,8 @@ open class DigestAuthenticator(private val credentials: Credentials) : CachingAu
         buffer.append(", ")
       }
       val name = param.name
-      val noQuotes = ("nc" == name || "qop" == name
-              || "algorithm" == name)
+      val noQuotes = ("nc" == name || "qop" == name ||
+              "algorithm" == name)
       BasicHeaderValueFormatter.DEFAULT.formatNameValuePair(buffer, param, !noQuotes)
     }
     return BasicNameValuePair(headerKey, buffer.toString())
@@ -420,7 +424,6 @@ open class DigestAuthenticator(private val credentials: Credentials) : CachingAu
       // try again with default encoding
       return s.toByteArray()
     }
-
   }
 
   private class AuthenticationException : IllegalStateException {
@@ -452,14 +455,14 @@ open class DigestAuthenticator(private val credentials: Credentials) : CachingAu
     private val HEXADECIMAL = charArrayOf('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f')
 
     private fun createMessageDigest(
-            digAlg: String): MessageDigest {
+      digAlg: String
+    ): MessageDigest {
       try {
         return MessageDigest.getInstance(digAlg)
       } catch (e: Exception) {
         throw IllegalArgumentException(
                 "Unsupported algorithm in HTTP Digest authentication: $digAlg", e)
       }
-
     }
 
     /**
@@ -473,7 +476,6 @@ open class DigestAuthenticator(private val credentials: Credentials) : CachingAu
       rnd.nextBytes(tmp)
       return encode(tmp.toUByteArray())
     }
-
 
     /**
      * Encodes the 128 bit (16 bytes) MD5 digest into a 32 characters long
@@ -504,7 +506,6 @@ open class DigestAuthenticator(private val credentials: Credentials) : CachingAu
         } catch (e: UnsupportedEncodingException) {
           throw Error("HttpClient requires ASCII support", e)
         }
-
       }
     }
   }

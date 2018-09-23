@@ -14,7 +14,7 @@ interface CachingAuthenticator : Authenticator {
    * Authenticate the new request using cached information already established from an earlier
    * authentication.
    *
-   * @param route   the route to use
+   * @param route the route to use
    * @param request the new request to be authenticated.
    * @return the modified request with updated auth headers.
    * @throws IOException in case of a communication problem

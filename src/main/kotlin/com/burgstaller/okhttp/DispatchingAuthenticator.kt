@@ -63,4 +63,3 @@ class DispatchingAuthenticator private constructor(private val authenticatorRegi
     }
   }
 }
-
