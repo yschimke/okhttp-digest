@@ -2,6 +2,8 @@
 A digest authenticator for okhttp. Most of the code is 
 ported from Apache Http Client.
 
+Damn
+
 # Usage
 
 ```java
